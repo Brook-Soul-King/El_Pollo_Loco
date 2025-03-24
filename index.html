@@ -1,1 +1,138 @@
+<!DOCTYPE html>
+<html lang="de" translate="no">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>EL POLLO LOCO</title>
+    <link rel="icon" type="image/x-icon" href="img/3_enemies_chicken/chicken_small/1_walk/1_w.png">
+
+    <link rel="stylesheet" href="style.css">
+    <script src="models/drawable-object.class.js"></script>
+    <script src="models/movable-object.class.js"></script>
+    <script src="models/status-bar-hp.class.js"></script>
+    <script src="models/status-bar-coins.class.js"></script>
+    <script src="models/status-bar-salsa.class.js"></script>
+    <script src="models/status-bar-endboss.class.js"></script>
+    <script src="models/chicken.class.js"></script>
+    <script src="models/cloud.class.js"></script>
+    <script src="models/world.class.js"></script>
+    <script src="models/character.class.js"></script>
+    <script src="models/background-object.class.js"></script>
+    <script src="models/keyboard.class.js"></script>
+    <script src="models/level.class.js"></script>
+    <script src="models/throwable-object.class.js"></script>
+    <script src="models/endboss.class.js"></script>
+    <script src="models/chicks.class.js"></script>
+    <script src="models/coin.class.js"></script>
+    <script src="models/salsa.class.js"></script>
+    <script src="levels/level1.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/templates.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/script.js"></script>
+
+</head>
+
+<body id="body">
+    <section class="game-container" id="game-container" width="720px" height="480px">
+        <nav id="navigation">
+            <div id="volumeBtn" >
+                <svg onclick="volumeOff()" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32px"
+                    height="32px">
+                    <title>volume-high</title>
+                    <path
+                        d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+                </svg>
+            </div>
+            <div id="fullscreen" class="d-none">
+                <svg onclick="openFullscreen()" xmlns="http://www.w3.org/2000/svg" width="32px" height="32px"
+                    viewBox="0 0 24 24">
+                    <title>fullscreen</title>
+                    <path d="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z" />
+                </svg>
+            </div>
+        </nav>
+
+        <div id="startscreen">
+
+            <div id="start-btn" onclick="init()">START</div>
+
+            <div id="legal_notice">
+                <div onclick="showImprint()">Impressum</div>
+                <div onclick="showInstructions()">Steuerung</div>
+            </div>
+
+        </div>
+
+        <canvas id="gameframe" width="720px" height="480px"></canvas>
+
+    </section>
+
+    <section class="hud d-none" id="hud">
+        <div>
+            <button id="moveLeftBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <title>move left</title>
+                    <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+                </svg>
+            </button>
+            <button id="moveRightBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <title>move right</title>
+                    <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+                </svg>
+            </button>
+        </div>
+        <div>
+            <button id="jumpBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <title>jump</title>
+                    <path d="M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z" />
+                </svg>
+            </button>
+            <button id="throwBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <title>throw</title>
+                    <path
+                        d="M14.4 9.58C12.9 7.89 13 4 13 4H14V2H10V4H11S11.1 7.89 9.6 9.58A2 2 0 0 0 9 11V20A2 2 0 0 0 11 22H13A2 2 0 0 0 15 20V11A2 2 0 0 0 14.4 9.58M13 20H11V11L11.1 10.91A6.26 6.26 0 0 0 12 9.5A6.26 6.26 0 0 0 12.9 10.91L13 11Z" />
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <div id="pop-up-container" class="d-none" onclick="hidePopUp()">
+        <div id="pop-up-text" onclick="doNotClose(event)">
+
+        </div>
+    </div>
+
+    <div id="rotateMessage">
+        <div>Bitte drehen Sie Ihr Gerät ins Querformat.</div>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40px" height="40px">
+            <title>rotate screen</title>
+            <path fill="white"
+                d="M7.5,21.5C4.25,19.94 1.91,16.76 1.55,13H0.05C0.56,19.16 5.71,24 12,24L12.66,23.97L8.85,20.16M14.83,21.19L2.81,9.17L9.17,2.81L21.19,14.83M10.23,1.75C9.64,1.16 8.69,1.16 8.11,1.75L1.75,8.11C1.16,8.7 1.16,9.65 1.75,10.23L13.77,22.25C14.36,22.84 15.31,22.84 15.89,22.25L22.25,15.89C22.84,15.3 22.84,14.35 22.25,13.77L10.23,1.75M16.5,2.5C19.75,4.07 22.09,7.24 22.45,11H23.95C23.44,4.84 18.29,0 12,0L11.34,0.03L15.15,3.84L16.5,2.5Z" />
+        </svg>
+    </div>
+
+    <div id="winningScreen" class="d-none">
+        <img src="img/9_intro_outro_screens/win/win_1.png">
+        <div>
+            <button onclick="goToMenu()">Menü</button>
+            <button onclick="init()">Neustart</button>
+        </div>
+    </div>
+
+    <div id="losingScreen" class="d-none">
+        <div>
+            <button onclick="goToMenu()">Menü</button>
+            <button onclick="init()">Neustart</button>
+        </div>
+    </div>
+
+</body>
+
+</html>
 
